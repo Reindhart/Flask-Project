@@ -1,0 +1,16 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+
+.fakeimg {
+	height: 200px;
+	background: #aaa;
+}
+
+.site{
+	min-height: 100dvh;
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+	grid-template-columns: minmax(0, 1fr);
+}
