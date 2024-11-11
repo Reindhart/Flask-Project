@@ -8,6 +8,10 @@ app = Flask(__name__)
 def index():
     return render_template('inicio.html')
 
+@app.route('/sing-up')
+def singup():
+    return render_template('singup.html')
+    
 @app.route('/carta')
 def carta():
     return render_template('carta.html')
