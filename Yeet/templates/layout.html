@@ -9,11 +9,12 @@
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css') }}" />
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/aesthetic.css') }}" />
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
-        {% block carta %}{% endblock %}
+        {% block cartacss %}{% endblock %}
 		<script src="{{ url_for('static', filename='js/jquery-3.7.1.min.js') }}" async></script>
 		<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}" async></script>
 		<script src="{{ url_for('static', filename='js/all.min.js') }}" async></script>
 		<script src="{{ url_for('static', filename='js/main.js') }}" async></script>
+		{% block cartajs %}{% endblock %}
 	</head>
 
 	<body>

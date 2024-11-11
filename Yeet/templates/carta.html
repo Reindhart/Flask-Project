@@ -1,7 +1,8 @@
 {% extends 'layout.html' %}
 {% block titulo %} Carta {% endblock %}
 
-{% block carta %} <link rel="stylesheet" href="{{ url_for('static', filename='css/carta.css') }}" /> {% endblock %}
+{% block cartacss %} <link rel="stylesheet" href="{{ url_for('static', filename='css/carta.css') }}" /> {% endblock %}
+{% block cartajs %} <script src="{{ url_for('static', filename='js/carta.js') }}" async></script> {% endblock %}
 
 {% block contenido %}
 <small>Enter message (optional) and click button "Send"</small>
