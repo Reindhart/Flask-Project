@@ -3,6 +3,12 @@ from flask_mysqldb import MySQL, MySQLdb
 from flask_bcrypt import bcrypt
 
 app = Flask(__name__)
+app.config['MYSQL_HOST'] = 'localhost'         # Dirección del servidor MySQL
+app.config['MYSQL_USER'] = 'root'          # Nombre de usuario para la base de datos
+app.config['MYSQL_PASSWORD'] = ''   # Contraseña para el usuario
+app.config['MYSQL_DB'] = 'nombre_basededatos' # Nombre de la base de datos
+
+mysql = MySQL(app)
 
 @app.route('/')
 def index():
