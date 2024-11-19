@@ -1,32 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>{% block titulo %}{% endblock %}</title>
-		<link rel="icon" href="{{ url_for('static', filename='img/svg/icon.svg') }}" type="image/svg+xml" />
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css') }}" />
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/aesthetic.css') }}" />
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+		<link rel="icon" href="{{ url_for('static', filename='img/svg/icon.svg') }}" type="image/svg+xml">
+		<!-- CSS -->
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/aesthetic.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
         {% block cartacss %}{% endblock %}
+		<!-- JS -->
 		<script src="{{ url_for('static', filename='js/jquery-3.7.1.min.js') }}" async></script>
-		<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}" async></script>
+		<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}" defer></script>
 		<script src="{{ url_for('static', filename='js/all.min.js') }}" async></script>
 		<script src="{{ url_for('static', filename='js/main.js') }}" async></script>
-		{% block cartajs %}{% endblock %}
+		{% block cartajs %}{% endblock %}	
 	</head>
-
 	<body>
-
 		<div class="site">
-			<header>{% block navbar %}{% endblock %}</header>
+			<header>{% include 'navbar.html' %}</header>
 	
 			{% block contenido %}{% endblock %}
 	
 			{% if not request.path.startswith('/cause-error') %}
 
-			<footer class="bg-dark text-center text-lg-start text-white">
+			<footer class="bg-dark text-center text-lg-start text-white mt-5">
 				<div class="container p-4">
 					<div class="row mt-4">
 						<div class="col-lg-3 col-md-6 mb-4 mb-md-0">

@@ -1,0 +1,51 @@
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark my-auto">
+	<div class="container-fluid">
+		<a class="navbar-brand m-3" href="{{ url_for('index')}}">
+			<img src="{{ url_for('static', filename='img/svg/icon.svg') }}" width="50" height="50" class="" loading="lazy" />
+			DuckyShop
+		</a>
+		<button
+			class="navbar-toggler"
+			type="button"
+			data-bs-toggle="collapse"
+			data-bs-target="#navbarTogglerDemo01"
+			aria-controls="navbarTogglerDemo01"
+			aria-expanded="false"
+			aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+			<div class="d-flex ms-auto">
+				<ul class="navbar-nav mb-2 mb-lg-0">
+					<li class="nav-item">
+						<a class="btn-nosotros nav-link" id="btn-nosotros" href="#"><i class="fas fa-address-card"></i> Nosotros</a>
+					</li>
+					<li class="nav-item">
+						<a class="btn-productos nav-link" id="btn-productos" href="#"><i class="fas fa-store"></i> Productos</a>
+					</li>
+
+					{% if role == 0 %}
+
+					<li class="nav-item">
+						<a class="btn-login nav-link" href="{{ url_for('auth')}}"><i class="fas fa-user"></i> Iniciar sesión</a>
+					</li>
+
+					{% else %}
+
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user"></i> {{ session['nombre'] }} </a>
+						<ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-end">
+							<li><a class="dropdown-item" href="{{ url_for('profile', username=session['nombre']) }}">Ver Perfil</a></li>
+							<li><a class="dropdown-item" href="#Carrito">Carrito</a></li>
+							<li><hr class="dropdown-divider" /></li>
+							<li><a class="dropdown-item" href="{{ url_for('logout')}}">Cerrar Sesión</a></li>
+						</ul>
+					</li>
+
+					{% endif %}
+
+				</ul>
+			</div>
+		</div>
+	</div>
+</nav>
