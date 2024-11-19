@@ -3,6 +3,7 @@ from flask_mysqldb import MySQL, MySQLdb
 from flask_bcrypt import bcrypt
 from flask_wtf.csrf import generate_csrf
 import secrets
+from clientes import *
 
 app = Flask(__name__)
 app.config['MYSQL_HOST'] = 'localhost'
@@ -29,7 +30,6 @@ def index():
 def auth():
 
     is_admin = request.path == '/sing-up_admin'
-    print(is_admin)
 
     if is_authenticated():
         return redirect(url_for('profile', username=session['nombre']))
@@ -44,22 +44,24 @@ def auth():
             })
     
         action_type = request.form.get("action_type")
-        print(is_admin)
         if action_type == "signup":
+            print(is_admin)
             if(registro(request.form, is_admin)):
-                session['role'] = 1
+                session['role'] = 2 if is_admin else 1
                 session['nombre'] = request.form['nombre']
                 return redirect(url_for('index'))
+            else:
+                print("error")
         elif action_type == "signin":
             if(login(request.form, is_admin)):
-                session['role'] = 1
+                session['role'] = 2 if is_admin else 1
                 return redirect(url_for('index'))
             else:
                 flash('Correo o contraseña incorrectos')
                 redirect(request.url)    
-    return render_template('singup.html', role=get_role())
+    return render_template('singup.html', role=get_role(), admin=is_admin)
 
-def registro(formulario, is_admin=False):
+def registro(formulario, is_admin):
     try:
         nombre_c = formulario['nombre']
         correo_c = formulario['correo']
@@ -90,23 +92,22 @@ def registro(formulario, is_admin=False):
             regCliente = mysql.connection.cursor()
             regCliente.execute("INSERT INTO clientes (nombre_c, correo_c, telefono_c, direccion_c, clave_c) VALUES (%s,%s,%s,%s,%s)",
                             (nombre_c, correo_c, telefono_c, direccion_c, Ccifrada))
-       
         mysql.connection.commit()
         return True
     except Exception as err:
         print(err)
         return
 
-def login(formulario, is_admin=False):
+def login(formulario, is_admin):
     correo_c = formulario['correo']
     clave_c = formulario['contrasena'].encode('utf-8')
     if is_admin:
         selAdmin = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        selAdmin.execute("SELECT * FROM admin WHERE correo_u=%s", (correo_c))
+        selAdmin.execute("SELECT * FROM admin WHERE correo_u=%s", (correo_c,))
         u = selAdmin.fetchone()
         selAdmin.close()
         if u is not None:
-            if bcrypt.hashpw(clave_c, u['clave_u'].encode('utf-8')) == u['clave_c'].encode('utf-8'):
+            if bcrypt.hashpw(clave_c, u['clave_u'].encode('utf-8')) == u['clave_u'].encode('utf-8'):
                 session['nombre'] = u['nombre_u']
                 session['correo'] = u['correo_u']
                 return redirect(url_for('index'))
@@ -132,25 +133,32 @@ def logout():
    
 @app.route('/<username>')
 def profile(username):
-    # Verifica si el usuario está autenticado
+    
+    is_admin = get_role()
     if not is_authenticated():
         return render_template('404.html'), 404
 
-    # Consulta para verificar si el usuario existe
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM clientes WHERE nombre_c = %s", (username,))
+    cursor.execute(f"SELECT * FROM {"admin" if is_admin == 2 else "clientes"} WHERE {"nombre_u" if is_admin == 2 else "nombre_c"} = %s", (username,))
     user = cursor.fetchone()
 
     if not user:
         return render_template('404.html'), 404
-
-    # Si el nombre de usuario no coincide con el de la sesión
+    
     if session.get('nombre') != username:
-        return redirect(url_for('index'))  # Redirige si intenta acceder a un perfil no autorizado
+        return redirect(url_for('index'))
 
-    # Renderiza el perfil
     return render_template('perfil.html', user=user)
 
+@app.route('/Clientes')
+def Clientes_ABCD():
+    if get_role() == 2:
+        selCliente = mysql.connection.cursor()
+        selCliente.execute("SELECT * FROM clientes")
+        i = selCliente.fetchall()
+        return render_template('sCliente.html', role=get_role(), clientes=i)
+    else:
+        return redirect(url_for('index'))
 
 @app.route('/carta')
 def carta():

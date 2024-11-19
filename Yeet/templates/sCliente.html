@@ -1,0 +1,328 @@
+{% extends 'layout.html' %} {% block titulo %}DuckyShop | Admin{% endblock %} {%
+block contenido %}
+
+<section class="container my-5">
+  <h3 style="float: left; margin-right: 20px">Clientes</h3>
+  <!-- Button trigger modal -->
+  <button
+    type="button"
+    class="btn btn-primary"
+    data-bs-toggle="modal"
+    data-bs-target="#exampleModal"
+  >
+    Launch demo modal
+  </button>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="exampleModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">...</div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    type="button"
+    class="btn btn-success"
+    data-toggle="modal"
+    data-target="#staticBackdrop"
+  >
+    <i class="fas fa-user-plus"></i>
+  </button>
+  <br /><br />
+  {% with mensajes = get_flashed_messages() %} {% if mensajes %} {% for msj in
+  mensajes %}
+  <div class="alert alert-info">{{ msj }}</div>
+  {% endfor %} {% endif %} {% endwith %}
+  <br />
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Correo</th>
+        <th scope="col">Teléfono</th>
+        <th scope="col">Dirección</th>
+        <th scope="col">Editar</th>
+        <th scope="col">Eliminar</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in clientes %}
+      <tr>
+        <th scope="row">{{i.id_c}}</th>
+        <td>{{i.nombre_c}}</td>
+        <td>{{i.correo_c}}</td>
+        <td>{{i.telefono_c}}</td>
+        <td>{{i.direccion_c}}</td>
+        <td style="text-align: center; vertical-align: middle">
+          <button
+            type="button"
+            class="btn btn-info"
+            data-toggle="modal"
+            data-target="#editar{{i.id_c}}"
+          >
+            <i class="fas fa-user-edit"></i>
+          </button>
+        </td>
+        <td style="text-align: center; vertical-align: middle">
+          <button
+            type="button"
+            class="btn btn-danger"
+            data-toggle="modal"
+            data-target="#eliminar{{i.id_c}}"
+          >
+            <i class="fas fa-user-slash"></i>
+          </button>
+        </td>
+      </tr>
+
+      <!--  EDITAR  -->
+      <div
+        class="modal fade"
+        id="editar{{i.id_c}}"
+        data-backdrop="static"
+        data-keyboard="false"
+        tabindex="-1"
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <form action="/uCliente" method="POST">
+              <input type="hidden" name="id_c" value="{{i.id_c}}" />
+              <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Editar</h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label for="nombre_c">Nombre: </label>
+                  <input
+                    type="text"
+                    name="nombre_c"
+                    value="{{i.nombre_c}}"
+                    class="form-control"
+                    placeholder="Ingrese su nombre"
+                    required
+                  />
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="correo_c">Correo: </label>
+                    <input
+                      type="email"
+                      name="correo_c"
+                      value="{{i.correo_c}}"
+                      class="form-control"
+                      placeholder="Correo electrónico"
+                      required
+                    />
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="telefono_c">Teléfono: </label>
+                    <input
+                      type="number"
+                      name="telefono_c"
+                      value="{{i.telefono_c}}"
+                      class="form-control"
+                      placeholder="Número telefónico"
+                      min="1"
+                      max="9999999999"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="exampleFormControlTextarea1">Dirección: </label>
+                  <textarea
+                    class="form-control"
+                    name="direccion_c"
+                    id="exampleFormControlTextarea1"
+                    rows="3"
+                    placeholder="Ingrese la dirección"
+                  >
+{{i.direccion_c}}</textarea
+                  >
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary btn-block">
+                  <i class="fas fa-edit"></i> Editar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!--  ELIMINAR  -->
+      <div
+        class="modal fade"
+        id="eliminar{{i.id_c}}"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalCenter"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalCenter">Eliminar</h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form action="/dCliente" method="POST">
+              <input type="hidden" name="id_c" value="{{i.id_c}}" />
+              <div class="modal-body">
+                <p>¿Realmente deseas elminar a {{i.nombre_c}}?</p>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-dismiss="modal"
+                >
+                  <i class="far fa-window-close"></i> Cancelar
+                </button>
+                <button type="sumbit" class="btn btn-danger">
+                  <i class="fas fa-trash-alt"></i> Eiminar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+
+      <!--  AGREGAR  -->
+      <div
+        class="modal fade"
+        id="staticBackdrop"
+        data-backdrop="static"
+        data-keyboard="false"
+        tabindex="-1"
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <form action="/iCliente" method="POST">
+              <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">
+                  Nuevo cliente
+                </h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label for="nombre_c">Nombre: </label>
+                  <input
+                    type="text"
+                    name="nombre_c"
+                    class="form-control"
+                    placeholder="Ingrese su nombre"
+                    required
+                  />
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="correo_c">Correo: </label>
+                    <input
+                      type="email"
+                      name="correo_c"
+                      class="form-control"
+                      placeholder="Correo electrónico"
+                      required
+                    />
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="clave_c">Contraseña:</label>
+                    <input
+                      type="password"
+                      name="clave_c"
+                      class="form-control"
+                      placeholder="Ingrese una contraseña"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="telefono_c">Teléfono: </label>
+                    <input
+                      type="number"
+                      name="telefono_c"
+                      class="form-control"
+                      placeholder="Número telefónico"
+                    />
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="direccion_c">Dirección:</label>
+                    <input
+                      type="text"
+                      name="direccion_c"
+                      class="form-control"
+                      placeholder="Dirección"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary btn-block">
+                  <i class="fas fa-address-card"></i> Agregar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </tbody>
+  </table>
+</section>
+<br />
+{% endblock %}
