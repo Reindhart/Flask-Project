@@ -1,0 +1,165 @@
+{% extends 'layout.html' %} {% block titulo %}DuckyShop | Admin{% endblock %} {% block contenido %}
+
+<section class="container my-5">
+	<div>
+		<h3 style="float: left; margin-right: 20px">Productos</h3>
+
+		<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+			<span class="fa-stack">
+        <i class="fas fa-box fa-stack-1x fa-lg"></i>
+        <i class="fas fa-plus fa-stack-1x" style="color: black;"></i>
+      </span>
+      
+		</button>
+	</div>
+	{% with mensajes = get_flashed_messages() %} {% if mensajes %} {% for msj in mensajes %}
+	<div class="alert alert-info alert-dismissible fade show mt-4" role="alert">
+		{{ msj }}
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+	{% endfor %} {% endif %} {% endwith %}
+	<br />
+	<table class="table table-hover my-auto">
+		<thead>
+			<tr>
+				<th scope="col">ID</th>
+				<th scope="col">Nombre</th>
+				<th scope="col">Precio</th>
+				<th scope="col">Descripcion</th>
+				<th scope="col">Existencia</th>
+				<th scope="col" class="text-center">Imagen</th>
+				<th scope="col" class="text-center">Editar</th>
+				<th scope="col" class="text-center">Eliminar</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for i in producto %}
+			<tr>
+				<th scope="row">{{i.id_p}}</th>
+				<td>{{i.nombre_p}}</td>
+				<td>{{i.precio}} $</td>
+				<td>{{i.descripcion}}</td>
+				<td style="text-align: center">{{i.existencia}}</td>
+				<td><img src="static/img/productos/{{i.imagen}}" height="100px" width="100px" /></td>
+				<td style="text-align: center; vertical-align: middle">
+					<button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#editar{{i.id_p}}">
+						<i class="fas fa-edit"></i>
+					</button>
+				</td>
+				<td style="text-align: center; vertical-align: middle">
+					<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#eliminar{{i.id_p}}">
+						<i class="fas fa-trash"></i>
+					</button>
+				</td>
+			</tr>
+
+			<!--  EDITAR  -->
+			<div class="modal fade" id="editar{{i.id_p}}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<form action="/uProducto" method="POST">
+							<input type="hidden" name="id_p" value="{{i.id_p}}" />
+							<div class="modal-header">
+								<h5 class="modal-title" id="staticBackdropLabel">Editar</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<div class="form-group">
+									<label for="nombre_p">Nombre: </label>
+									<input type="text" name="nombre_p" value="{{i.nombre_p}}" class="form-control" placeholder="Ingrese un nombre" />
+								</div>
+								<div class="form-row">
+									<div class="form-group col-md-6">
+										<label for="precio">Precio: </label>
+										<input type="number" name="precio" value="{{i.precio}}" class="form-control" placeholder="Ingrese un precio" />
+									</div>
+									<div class="form-group col-md-6">
+										<label for="existencia">Existencia:</label>
+										<input type="number" name="existencia" class="form-control" placeholder="Ingrese la existencia" value="{{i.existencia}}" />
+									</div>
+									<div class="form-group col-md-6">
+										<label for="existencia">Imagen:</label>
+										<input type="text" name="imagen" class="form-control" placeholder="Ingrese el nombre de la imagen" value="{{i.imagen}}" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="exampleFormControlTextarea1">Descripcion: </label>
+									<textarea class="form-control" name="descripcion" id="exampleFormControlTextarea1" rows="3" placeholder="Ingrese una descrpición">{{i.descripcion}}</textarea>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="submit" class="btn btn-primary btn-block"><i class="fas fa-edit"></i> Actualizar</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<!--  ELIMINAR  -->
+			<div class="modal fade" id="eliminar{{i.id_p}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">Eliminar</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<form action="/dProducto" method="POST">
+							<input type="hidden" name="id_p" value="{{i.id_p}}" />
+							<div class="modal-body">
+								<p>¿Realmente deseas elminar {{i.nombre_p}}?</p>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary" data-dismiss="modal"><i class="far fa-window-close"></i> Cancelar</button>
+								<button type="sumbit" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Eiminar</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+
+			<!--  AGREGAR  -->
+			<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<form action="/iProducto" method="POST">
+							<div class="modal-header">
+								<h5 class="modal-title" id="staticBackdropLabel">Nuevo Producto</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<div class="form-group">
+									<label for="nombre_p">Nombre: </label>
+									<input type="text" name="nombre_p" class="form-control" placeholder="Ingrese un nombre" required />
+								</div>
+								<div class="form-row">
+									<div class="form-group col-md-6">
+										<label for="precio">Precio: </label>
+										<input type="number" name="precio" class="form-control" placeholder="Ingrese un precio" required />
+									</div>
+									<div class="form-group col-md-6">
+										<label for="existencia">Existencia:</label>
+										<input type="number" name="existencia" class="form-control" placeholder="Ingrese la existencia" required />
+									</div>
+									<div class="form-group col-md-6">
+										<label for="existencia">Imagen:</label>
+										<input type="text" name="imagen" class="form-control" onfocus="this.value=''" value="default.png" placeholder="Ej. default.png" required />
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="exampleFormControlTextarea1">Descripcion: </label>
+									<textarea class="form-control" name="descripcion" id="exampleFormControlTextarea1" rows="3" placeholder="Ingrese una descrpición" required></textarea>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="submit" class="btn btn-primary btn-block"><i class="fas fa-edit"></i> Agregar</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</tbody>
+	</table>
+</section>
+<br />
+{% endblock %}

@@ -1,15 +1,17 @@
 {% extends 'layout.html' %} {% block titulo %} Inicio {% endblock %} {% block contenido %}
 
+
 <div class="container rounded">
 	<div class="row">
 		<div class="col-md-3 border-right">
 			<div class="d-flex flex-column align-items-center text-center p-3 py-5">
-				<img
-					class="rounded-circle mt-5"
-					width="150px"
-					src="{{ url_for('static', filename='img/profile-test.jpg') }}" /><span class="font-weight-bold"
-					>{{ session['nombre'] }} | {{ session['role'] }}</span
-				><span class="text-black-50">{{ session['correo'] }}</span><span> </span>
+				<img class="rounded-circle mt-5" width="150px" src="{{ url_for('static', filename='img/profile-test.jpg') }}" />
+				<span class="font-weight-bold">
+					{{ nombre }} | {{ role }}
+				</span>
+				<span class="text-black-50">
+					{{ correo }}
+				</span>
 			</div>
 		</div>
 		<div class="col-md-5 border-right">
@@ -17,25 +19,20 @@
 				<div class="d-flex justify-content-between align-items-center mb-3">
 					<h4 class="text-right">Opciones de Perfil</h4>
 				</div>
-				<div class="row mt-2">
-					<div class="col-md-6"><label class="labels">Name</label><input type="text" class="form-control" placeholder="first name" value="{{user.nombre_c}}" /></div>
-					<div class="col-md-6"><label class="labels">Surname</label><input type="text" class="form-control" value="" placeholder="surname" /></div>
-				</div>
-				<div class="row mt-3">
-					<div class="col-md-12"><label class="labels">Mobile Number</label><input type="text" class="form-control" placeholder="enter phone number" value="{{user.telefeno_c}}" /></div>
-					<div class="col-md-12"><label class="labels">Address Line 1</label><input type="text" class="form-control" placeholder="enter address line 1" value="" /></div>
-					<div class="col-md-12"><label class="labels">Address Line 2</label><input type="text" class="form-control" placeholder="enter address line 2" value="" /></div>
-					<div class="col-md-12"><label class="labels">Postcode</label><input type="text" class="form-control" placeholder="enter address line 2" value="" /></div>
-					<div class="col-md-12"><label class="labels">State</label><input type="text" class="form-control" placeholder="enter address line 2" value="" /></div>
-					<div class="col-md-12"><label class="labels">Area</label><input type="text" class="form-control" placeholder="enter address line 2" value="" /></div>
-					<div class="col-md-12"><label class="labels">Email ID</label><input type="text" class="form-control" placeholder="enter email id" value="" /></div>
-					<div class="col-md-12"><label class="labels">Education</label><input type="text" class="form-control" placeholder="education" value="" /></div>
-				</div>
-				<div class="row mt-3">
-					<div class="col-md-6"><label class="labels">Country</label><input type="text" class="form-control" placeholder="country" value="" /></div>
-					<div class="col-md-6"><label class="labels">State/Region</label><input type="text" class="form-control" value="" placeholder="state" /></div>
-				</div>
-				<div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="button">Guardar cambios</button></div>
+				<form method="POST" action="/update-profile">
+					<div class="row mt-2">
+						<div class="col-md-6"><label class="labels">Nombre/s</label><input type="text" class="form-control" placeholder="Perenganito" value="{{ nombre }}" /></div>
+						<div class="col-md-6"><label class="labels">Apellidos</label><input type="text" class="form-control" placeholder="Sanchez" value="{{ apellido }}"/></div>
+					</div>
+					<div class="row mt-3">
+						<div class="col-md-12"><label class="labels">Telefono</label><input type="text" class="form-control" placeholder="---" value="{{ telefono }}" /></div>
+						<div class="col-md-12"><label class="labels">Direccion</label><input type="text" class="form-control" placeholder="---" value="{{ direccion }}" /></div>
+						<div class="col-md-12"><label class="labels">Correo</label><input type="text" class="form-control" placeholder="algo@ejemplo.com" value="{{ correo }}" /></div>
+						<div class="col-md-12"><label class="labels">Nueva contraseña</label><input type="text" class="form-control" placeholder="Ingrese contraseña actual" value="" /></div>
+						<div class="col-md-12"><label class="lables"><br></label><input type="text" class="form-control" placeholder="Contraseña Nueva" value="" /></div>
+					</div>
+					<div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="submit">Guardar cambios</button></div>
+				</form>
 			</div>
 		</div>
 		

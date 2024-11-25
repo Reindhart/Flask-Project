@@ -2,65 +2,22 @@
 block contenido %}
 
 <section class="container my-5">
-  <h3 style="float: left; margin-right: 20px">Clientes</h3>
-  <!-- Button trigger modal -->
-  <button
-    type="button"
-    class="btn btn-primary"
-    data-bs-toggle="modal"
-    data-bs-target="#exampleModal"
-  >
-    Launch demo modal
-  </button>
-
-  <!-- Modal -->
-  <div
-    class="modal fade"
-    id="exampleModal"
-    tabindex="-1"
-    aria-labelledby="exampleModalLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div class="modal-body">...</div>
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
-            Close
-          </button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
+  <div >
+    <h3 style="float: left; margin-right: 20px">Clientes</h3>
+    
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+      <i class="fas fa-user-plus"></i>
+    </button>
   </div>
-  <button
-    type="button"
-    class="btn btn-success"
-    data-toggle="modal"
-    data-target="#staticBackdrop"
-  >
-    <i class="fas fa-user-plus"></i>
-  </button>
-  <br /><br />
   {% with mensajes = get_flashed_messages() %} {% if mensajes %} {% for msj in
   mensajes %}
-  <div class="alert alert-info">{{ msj }}</div>
+  <div class="alert alert-info alert-dismissible fade show mt-4" role="alert">
+    {{ msj }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
   {% endfor %} {% endif %} {% endwith %}
   <br />
-  <table class="table table-hover">
+  <table class="table table-hover my-auto">
     <thead>
       <tr>
         <th scope="col">ID</th>
@@ -68,8 +25,8 @@ block contenido %}
         <th scope="col">Correo</th>
         <th scope="col">Teléfono</th>
         <th scope="col">Dirección</th>
-        <th scope="col">Editar</th>
-        <th scope="col">Eliminar</th>
+        <th scope="col" class="text-center">Editar</th>
+        <th scope="col" class="text-center">Eliminar</th>
       </tr>
     </thead>
     <tbody>
@@ -81,37 +38,19 @@ block contenido %}
         <td>{{i.telefono_c}}</td>
         <td>{{i.direccion_c}}</td>
         <td style="text-align: center; vertical-align: middle">
-          <button
-            type="button"
-            class="btn btn-info"
-            data-toggle="modal"
-            data-target="#editar{{i.id_c}}"
-          >
+          <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#editar{{i.id_c}}">
             <i class="fas fa-user-edit"></i>
           </button>
         </td>
-        <td style="text-align: center; vertical-align: middle">
-          <button
-            type="button"
-            class="btn btn-danger"
-            data-toggle="modal"
-            data-target="#eliminar{{i.id_c}}"
-          >
-            <i class="fas fa-user-slash"></i>
+        <td class="text-center">
+          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#eliminar{{i.id_c}}">
+            <i class="fas fa-user-slash"></i> {{i.id_c}}
           </button>
         </td>
       </tr>
 
       <!--  EDITAR  -->
-      <div
-        class="modal fade"
-        id="editar{{i.id_c}}"
-        data-backdrop="static"
-        data-keyboard="false"
-        tabindex="-1"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-      >
+      <div class="modal fade" id="editar{{i.id_c}}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <form action="/uCliente" method="POST">
@@ -120,11 +59,10 @@ block contenido %}
                 <h5 class="modal-title" id="staticBackdropLabel">Editar</h5>
                 <button
                   type="button"
-                  class="close"
-                  data-dismiss="modal"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
                   aria-label="Close"
                 >
-                  <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
@@ -166,15 +104,7 @@ block contenido %}
                 </div>
                 <div class="form-group">
                   <label for="exampleFormControlTextarea1">Dirección: </label>
-                  <textarea
-                    class="form-control"
-                    name="direccion_c"
-                    id="exampleFormControlTextarea1"
-                    rows="3"
-                    placeholder="Ingrese la dirección"
-                  >
-{{i.direccion_c}}</textarea
-                  >
+                  <textarea class="form-control" name="direccion_c" id="exampleFormControlTextarea1" rows="3" placeholder="Ingrese la dirección">{{i.direccion_c}}</textarea>
                 </div>
               </div>
               <div class="modal-footer">
@@ -188,26 +118,12 @@ block contenido %}
       </div>
 
       <!--  ELIMINAR  -->
-      <div
-        class="modal fade"
-        id="eliminar{{i.id_c}}"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalCenter"
-        aria-hidden="true"
-      >
+      <div class="modal fade" id="eliminar{{i.id_c}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalCenter">Eliminar</h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="/dCliente" method="POST">
               <input type="hidden" name="id_c" value="{{i.id_c}}" />
@@ -215,12 +131,8 @@ block contenido %}
                 <p>¿Realmente deseas elminar a {{i.nombre_c}}?</p>
               </div>
               <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  data-dismiss="modal"
-                >
-                  <i class="far fa-window-close"></i> Cancelar
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                  <i class="fas fa-window-close"></i> Cancelar
                 </button>
                 <button type="sumbit" class="btn btn-danger">
                   <i class="fas fa-trash-alt"></i> Eiminar
@@ -233,29 +145,15 @@ block contenido %}
       {% endfor %}
 
       <!--  AGREGAR  -->
-      <div
-        class="modal fade"
-        id="staticBackdrop"
-        data-backdrop="static"
-        data-keyboard="false"
-        tabindex="-1"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-      >
+      <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
-            <form action="/iCliente" method="POST">
+            <form action="/iClientes" method="POST">
               <div class="modal-header">
                 <h5 class="modal-title" id="staticBackdropLabel">
                   Nuevo cliente
                 </h5>
-                <button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">&times;</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                 </button>
               </div>
               <div class="modal-body">

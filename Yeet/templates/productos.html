@@ -1,0 +1,72 @@
+{% extends 'layout.html' %} {% block titulo %} Productos {% endblock %} {% block contenido %}
+
+<div class="row row-cols-2 mt-5">
+	<div class="container col-8">
+		<div class="row row-cols-4 row-cols-md-4">
+			{% for i in productos %} {% with getID = i.id_p %}
+			<div class="col mb-4">
+				<div class="card h-100">
+					<img src="static/img/productos/{{i.imagen}}" class="card-img-top" />
+					<div class="card-body" style="height: 80%">
+						<h5 class="card-title">{{i.nombre_p}}</h5>
+						<form action="/infoprod" method="POST" value="{{i.id_p}}"></form>
+						<h4 class="card-title">{{i.precio}} $</h4>
+						<div class="row">
+							<div class="col-7">
+								<button class="btn btn-success" role="button"><i class="fas fa-shopping-cart"></i> Agregar
+									<form action="/addCarrito" id="CarrID{{ getID }}" method="POST">
+										<input type="hidden" name="id_p" value="{{i.id_p}}" /></i>
+									</form>
+								</button>
+							</div>
+							<div class="col-5">
+								<button class="btn btn-primary" role="button">Ver más
+									<form action="/infoprod" id="getID{{ getID }}" method="POST">
+										<input type="hidden" value="{{ getID }}" />        							
+									</form>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endwith %} {% endfor %}
+		</div>
+	</div>
+	
+	<div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-dark-subtle col-4 w-25">
+		<div class="d-flex align-items-center flex-shrink-0 p-3 link-body-emphasis text-decoration-none border-bottom">
+			<span class="fs-5 fw-semibold"><i class="fas fa-shopping-cart"></i> Carrito</span>
+		</div>
+	
+		<div class="list-group list-group-flush border-bottom scrollarea">
+			<!-- Comprobar si el carrito está vacío -->
+			{% if not carrito or carrito|length == 0 %}
+			
+			<div class="col-10 mb-1 small"><h5>No hay elementos en el carrito</h5></div>
+			
+			{% else %}
+			<!-- Iterar sobre los elementos del carrito -->
+			{% for producto in carrito %}
+			<a href="/infoprod" class="list-group-item list-group-item-action py-3 lh-sm">
+				<div class="d-flex w-100 align-items-center justify-content-between">
+					<strong class="mb-1">{{ producto.nombre }}</strong>
+					<form action="/remove_from_cart" method="POST" class="m-0 p-0">
+						<input type="hidden" name="product_id" value="{{ producto.id }}">
+						<button class="btn btn-link p-0 text-danger" type="submit"><i class="fas fa-x"></i></button>
+					</form>
+				</div>
+				<div class="col-10 mb-1 small">Precio: ${{ producto.precio }}</div>
+			</a>
+			{% endfor %}
+			<form action="/Comprar" id="CarrID{{ carrito.id }}" method="POST">
+				<button class="btn btn-success" role="button" type="submit">
+					<i class="fas fa-shopping-cart"></i> Comprar
+				</button>
+			</form>
+			{% endif %}
+		</div>
+	</div>
+</div>
+
+{% endblock %}
