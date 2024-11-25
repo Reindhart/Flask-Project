@@ -373,6 +373,10 @@ def CompraVenta_ABCD():
         return render_template('sCompraVenta.html', role=get_role())
     else:
         return redirect(url_for('index'))
+    
+@app.route('/ejemplos', methods=['POST'])
+def ejemplos():
+    pass
 
 @app.route('/carta')
 def carta():
@@ -385,6 +389,95 @@ def page_not_found(e):
 @app.errorhandler(500)
 def internal_server_error(e):
     return render_template('500.html'), 500
+
+def execute_sql(query):
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        cursor.execute(query)
+        result = cursor.fetchall()
+    except Exception as e:
+        result = f"Error al ejecutar la consulta: {e}"
+    finally:
+        cursor.close()
+        
+    return result
+
+@app.route('/execute_query', methods=['POST'])
+def execute_query():
+    query = request.form['query']
+    result = None
+    
+    # Aquí asignamos la consulta correcta según el botón presionado
+    if query == 'equal_to':
+        result = execute_sql("SELECT nombre_c, correo_c FROM clientes WHERE nombre_c = 'Juan Pérez';")
+    elif query == 'not_equal_to':
+        result = execute_sql("SELECT nombre_p, precio FROM producto WHERE precio <> 22.75;")
+    elif query == 'greater_than':
+        result = execute_sql("SELECT nombre_p, precio FROM producto WHERE precio > 10.00;")
+    elif query == 'greater_or_equal':
+        result = execute_sql("SELECT nombre_p, existencia FROM producto WHERE existencia >= 100;")
+    elif query == 'less_than':
+        result = execute_sql("SELECT nombre_c, telefono_c FROM clientes WHERE id_c < 10;")
+    elif query == 'less_or_equal':
+        result = execute_sql("SELECT nombre_p, descripcion FROM producto WHERE existencia <= 50;")
+    elif query == 'between':
+        result = execute_sql("SELECT nombre_c, telefono_c FROM clientes WHERE id_c BETWEEN 5 AND 20;")
+    elif query == 'in_set':
+        result = execute_sql("SELECT nombre_p FROM producto WHERE nombre_p IN ('Comida para canarios', 'Juguete para loros');")
+    elif query == 'not_in_set':
+        result = execute_sql("SELECT nombre_c FROM clientes WHERE nombre_c NOT IN ('Juan Pérez', 'Ana García');")
+    elif query == 'is_null':
+        result = execute_sql("SELECT nombre_c FROM clientes WHERE telefono_c IS NULL;")
+    elif query == 'is_not_null':
+        result = execute_sql("SELECT nombre_p FROM producto WHERE descripcion IS NOT NULL;")
+    elif query == 'like':
+        result = execute_sql("SELECT nombre_c, correo_c FROM clientes WHERE correo_c LIKE '%gmail.com';")
+    elif query == 'not_like':
+        result = execute_sql("SELECT nombre_c FROM clientes WHERE correo_c NOT LIKE '%yahoo.com';")
+    elif query == 'count':
+        result = execute_sql("SELECT COUNT(*) FROM producto WHERE existencia > 50;")
+    elif query == 'avg':
+        result = execute_sql("SELECT AVG(precio) FROM producto WHERE existencia > 50;")
+    elif query == 'sum':
+        result = execute_sql("SELECT SUM(existencia) FROM producto WHERE precio < 20;")
+    elif query == 'max':
+        result = execute_sql("SELECT MAX(precio) FROM producto;")
+    elif query == 'min':
+        result = execute_sql("SELECT MIN(precio) FROM producto;")
+    elif query == 'count_field':
+        result = execute_sql("SELECT COUNT(nombre_p) FROM producto WHERE existencia > 100;")
+    elif query == 'avg_group':
+        result = execute_sql("SELECT AVG(precio) FROM producto GROUP BY nombre_p;")
+    elif query == 'count_client':
+        result = execute_sql("SELECT nombre_c, COUNT(*) FROM clientes GROUP BY nombre_c;")
+    elif query == 'min_price':
+        result = execute_sql("SELECT MIN(precio) FROM producto WHERE existencia < 50;")
+    elif query == 'avg_exist':
+        result = execute_sql("SELECT AVG(existencia) FROM producto;")
+    # Asignamos consultas para Group By, Having, Order By
+    elif query == 'group_by_category':
+        result = execute_sql("SELECT categoria, COUNT(*) AS total FROM producto GROUP BY categoria;")
+    elif query == 'group_by_price_range':
+        result = execute_sql("SELECT FLOOR(precio / 10) * 10 AS rango_precio, COUNT(*) AS total FROM producto GROUP BY rango_precio;")
+    elif query == 'group_by_supplier':
+        result = execute_sql("SELECT id_proveedor, COUNT(*) AS productos_totales FROM producto GROUP BY id_proveedor;")
+    elif query == 'group_by_stock_status':
+        result = execute_sql("SELECT CASE WHEN existencia > 50 THEN 'En Stock' ELSE 'Bajo Stock' END AS estado_stock, COUNT(*) AS total FROM producto GROUP BY estado_stock;")
+    elif query == 'having_high_sales':
+        result = execute_sql("SELECT categoria, SUM(precio * existencia) AS ventas FROM producto GROUP BY categoria HAVING ventas > 5000;")
+    elif query == 'having_low_stock':
+        result = execute_sql("SELECT nombre_p, existencia FROM producto HAVING existencia < 10;")
+    elif query == 'order_by_price_asc':
+        result = execute_sql("SELECT nombre_p, precio FROM producto ORDER BY precio ASC;")
+    elif query == 'order_by_price_desc':
+        result = execute_sql("SELECT nombre_p, precio FROM producto ORDER BY precio DESC;")
+    elif query == 'order_by_name':
+        result = execute_sql("SELECT nombre_c, correo_c FROM clientes ORDER BY nombre_c;")
+    elif query == 'group_and_order':
+        result = execute_sql("SELECT categoria, COUNT(*) AS total FROM producto GROUP BY categoria ORDER BY total DESC;") 
+    flash(result)
+
+    return redirect(url_for('CompraVenta_ABCD'))
 
 if __name__ == "__main__":
     app.run(port=3850, debug=True)
