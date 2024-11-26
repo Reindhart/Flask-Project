@@ -46,3 +46,6 @@ async function syncCartWithServer() {
         body: JSON.stringify({ cart_id: cartId, cart }),
     });
 }
+
+
+

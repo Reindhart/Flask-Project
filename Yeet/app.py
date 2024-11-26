@@ -331,16 +331,21 @@ def Productos_ABCD():
     
 @app.route('/iProducto', methods=['POST'])
 def iProducto():
-    if request.method == 'POST':
-        nombre_p = request.form['nombre_p']
-        precio = request.form['precio']
-        descripcion = request.form['descripcion']
-        existencia = request.form['existencia']
-        imagen = request.form['imagen']
-        regProducto = mysql.connection.cursor()
-        regProducto.execute("INSERT INTO producto (nombre_p, precio, descripcion, existencia, imagen) VALUES (%s,%s,%s,%s,%s)",
-                            (nombre_p, precio, descripcion, existencia, imagen))
-        mysql.connection.commit()
+    try:
+    
+        if request.method == 'POST':
+            nombre_p = request.form['nombre_p']
+            precio = request.form['precio']
+            descripcion = request.form['descripcion']
+            existencia = request.form['existencia']
+            imagen = request.form['imagen']
+            regProducto = mysql.connection.cursor()
+            regProducto.execute("INSERT INTO producto (nombre_p, precio, descripcion, existencia, imagen) VALUES (%s,%s,%s,%s,%s)",
+                                (nombre_p, precio, descripcion, existencia, imagen))
+            mysql.connection.commit()
+    except Exception as e:
+        flash(f"Error: {str(e)}", category="error")
+        
     return redirect(url_for('Productos_ABCD'))
     
 @app.route('/uProducto', methods=['GET', 'POST'])
@@ -370,7 +375,20 @@ def dProducto():
 @app.route('/CompraVenta')
 def CompraVenta_ABCD():
     if get_role() == 2:
-        return render_template('sCompraVenta.html', role=get_role())
+        
+        selProducto = mysql.connection.cursor()
+        selProducto.execute("SELECT * FROM producto")
+        Producto = selProducto.fetchall()
+        
+        selCompra = mysql.connection.cursor()
+        selCompra.execute("SELECT * FROM detalle_f_compra")
+        Compra = selCompra.fetchall()
+        
+        selVenta = mysql.connection.cursor()
+        selVenta.execute("SELECT * FROM detalle_f_venta")
+        Venta = selVenta.fetchall()
+        
+        return render_template('sCompraVenta.html', role=get_role(), compras=Compra, ventas=Venta, productos=Producto)
     else:
         return redirect(url_for('index'))
     
@@ -605,7 +623,7 @@ def consulta_producto():
         flash(flash_result)
     
     # Retornar los resultados a la plantilla
-    return render_template('consulta_producto.html', result=result)
+    return render_template('consulta_producto.html', result=result, role=get_role())
 
 @app.route('/vista_precio_promedio')
 def vista_precio_promedio():
