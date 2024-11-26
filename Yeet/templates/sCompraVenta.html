@@ -1,4 +1,4 @@
-{% extends 'layout.html' %} {% block titulo %} Compra Venta {% endblock %} {% block contenido %}
+{% extends 'layout.html' %} {% block titulo %} Compra | Venta {% endblock %} {% block contenido %}
 
 <section class="container mt-5">
 	{% with messages = get_flashed_messages() %} {% if messages %}
@@ -98,20 +98,6 @@
 		<button type="submit" class="btn btn-danger mb-2" name="query" value="aggregation_{{ i }}">Consulta Agregación {{ i }}</button>
 		{% endfor %}
 	</form>
-	<h5>Vistas</h5>
-
-	<div class="row">
-		<form class="col" method="GET" action="{{ url_for('vista_precio_promedio') }}">
-			<button type="submit" class="btn btn-secondary mb-2">Vista: Precio Promedio por Categoría</button>
-		</form>
-		<form class="col" method="GET" action="{{ url_for('vista_existencia_baja') }}">
-			<button type="submit" class="btn btn-secondary mb-2">Vista: Productos con Existencia Baja</button>
-		</form>
-		<form class="col" method="GET" action="{{ url_for('vista_ventas_totales') }}">
-			<button type="submit" class="btn btn-secondary mb-2">Vista: Ventas Totales por Categoría</button>
-		</form>
-	</div>
-
 	<hr />
 
 
@@ -151,7 +137,12 @@
 
 
 
-
+	{% with mensajes = get_flashed_messages() %} {% if mensajes %} {% for msj in mensajes %}
+	<div class="alert alert-info alert-dismissible fade show mt-4" role="alert">
+		{{ msj }}
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+	{% endfor %} {% endif %} {% endwith %}
 
 	<ul class="nav nav-tabs" id="myTab" role="tablist">
 		<li class="nav-item" role="presentation">
@@ -170,13 +161,6 @@
 
 			<button class="btn btn-success m-3" data-bs-toggle="modal" data-bs-target="#detalleCompra" ><i class="fas fa-bag-shopping"></i> Nueva Compra</button>
 
-			{% with mensajes = get_flashed_messages() %} {% if mensajes %} {% for msj in mensajes %}
-			<div class="alert alert-info alert-dismissible fade show mt-4" role="alert">
-				{{ msj }}
-				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-			</div>
-			{% endfor %} {% endif %} {% endwith %}
-
 			<table class="table table-hover my-auto">
 				<thead>
 					<tr>
@@ -185,55 +169,50 @@
 						<th scope="col">Cantidad</th>
 						<th scope="col">Precio</th>
 						<th scope="col">Importe</th>
+						<th scope="col" class="text-center">Editar</th>
 						<th scope="col" class="text-center">Eliminar</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for i in compras %}
 					<tr>
-						<th scope="row">{{i.id_Detalle_Compra}}</th>
-						<td>{{i.FK_Producto}}</td>
+						<th scope="row">{{i.id_p}}</th>
+						<td>{{i.nombre_p}}</td>
 						<td>{{i.Cantidad}}</td>
-						<td>{{i.FK_Producto}}</td>
+						<td>{{i.precio}}</td>
 						<td>{{i.Precio_Compra}}</td>
-						<td style="text-align: center; vertical-align: middle">
-							<button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#editar{{i.id_c}}">
-								<i class="fas fa-user-edit"></i>
+						<td class="text-center">
+							<button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detalleCompra-e{{i.id_Detalle_Compra}}">
+								<i class="fas fa-edit"></i>
 							</button>
 						</td>
 						<td class="text-center">
-							<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#eliminar{{i.id_c}}"><i class="fas fa-user-slash"></i> {{i.id_c}}</button>
+							<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#detalleCompra-d{{i.id_Detalle_Compra}}">
+								<i class="fas fa-trash"></i>
+							</button>
 						</td>
 					</tr>
 
 					<!--  EDITAR  -->
-					<div class="modal fade" id="detalleCompra-e{{i.id_c}}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+					<div class="modal fade" id="detalleCompra-e{{i.id_Detalle_Compra}}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 						<div class="modal-dialog modal-dialog-centered">
 							<div class="modal-content">
-								<form action="/uCliente" method="POST">
-									<input type="hidden" name="id_c" value="{{i.id_c}}" />
+								<form action="/uCompra" method="POST">
+									<input type="hidden" name="id_Detalle_Compra" value="{{i.id_Detalle_Compra}}" />
 									<div class="modal-header">
 										<h5 class="modal-title" id="staticBackdropLabel">Editar</h5>
 										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 									</div>
 									<div class="modal-body">
-										<div class="form-group">
-											<label for="nombre_c">Nombre: </label>
-											<input type="text" name="nombre_c" value="{{i.nombre_c}}" class="form-control" placeholder="Ingrese su nombre" required />
-										</div>
-										<div class="form-row">
-											<div class="form-group col-md-6">
-												<label for="correo_c">Correo: </label>
-												<input type="email" name="correo_c" value="{{i.correo_c}}" class="form-control" placeholder="Correo electrónico" required />
+										<div class="row">
+											<div class="col-md-6">
+												<label for="cantidad">ID Producto: </label>
+												<input type="text" name="cantidad" class="form-control" value="" required />
 											</div>
-											<div class="form-group col-md-6">
-												<label for="telefono_c">Teléfono: </label>
-												<input type="number" name="telefono_c" value="{{i.telefono_c}}" class="form-control" placeholder="Número telefónico" min="1" max="9999999999" />
+											<div class="col-md-6">
+												<label for="cantidad">Cantidad:</label>
+												<input type="number" name="cantidad" class="form-control" placeholder="" required />
 											</div>
-										</div>
-										<div class="form-group">
-											<label for="exampleFormControlTextarea1">Dirección: </label>
-											<textarea class="form-control" name="direccion_c" id="exampleFormControlTextarea1" rows="3" placeholder="Ingrese la dirección">{{i.direccion_c}}</textarea>
 										</div>
 									</div>
 									<div class="modal-footer">
@@ -245,17 +224,17 @@
 					</div>
 
 					<!--  ELIMINAR  -->
-					<div class="modal fade" id="detalleCompra-d{{i.id_c}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+					<div class="modal fade" id="detalleCompra-d{{i.id_Detalle_Compra}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
 						<div class="modal-dialog modal-dialog-centered" role="document">
 							<div class="modal-content">
 								<div class="modal-header">
 									<h5 class="modal-title" id="exampleModalCenter">Eliminar</h5>
 									<button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
 								</div>
-								<form action="/dCliente" method="POST">
-									<input type="hidden" name="id_c" value="{{i.id_c}}" />
+								<form action="/dCompra" method="POST">
+									<input type="hidden" name="id_Detalle_Compra" value="{{i.id_Detalle_Compra}}" />
 									<div class="modal-body">
-										<p>¿Realmente deseas elminar a {{i.nombre_c}}?</p>
+										<p>¿Realmente deseas elminar la compra?</p>
 									</div>
 									<div class="modal-footer">
 										<button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fas fa-window-close"></i> Cancelar</button>
@@ -271,24 +250,20 @@
 					<div class="modal fade" id="detalleCompra" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 						<div class="modal-dialog modal-dialog-centered">
 							<div class="modal-content">
-								<form action="/iClientes" method="POST">
+								<form action="/iCompra" method="POST">
 									<div class="modal-header">
-										<h5 class="modal-title" id="staticBackdropLabel">Nuevo cliente</h5>
+										<h5 class="modal-title" id="staticBackdropLabel">Nueva Compra</h5>
 										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 									</div>
 									<div class="modal-body">
-										<div class="form-group">
-											<label for="nombre_c">ID Producto: </label>
-											<input type="text" name="nombre_c" class="form-control" placeholder="" required />
-										</div>
-										<div class="form-row">
-											<div class="form-group col-md-6">
-												<label for="correo_c">ID Proveedor: </label>
-												<input type="text" name="correo_c" class="form-control" placeholder="" required />
+										<div class="row">
+											<div class="col-md-6">
+												<label for="producto_id">ID Producto: </label>
+												<input type="text" name="producto_id" class="form-control" placeholder="" required />
 											</div>
-											<div class="form-group col-md-6">
-												<label for="clave_c">Cantidad:</label>
-												<input type="number" name="clave_c" class="form-control" placeholder="" required />
+											<div class="col-md-6">
+												<label for="cantidad">Cantidad:</label>
+												<input type="number" name="cantidad" class="form-control" placeholder="" required />
 											</div>
 										</div>
 									</div>
@@ -321,13 +296,6 @@
 
 			<button class="btn btn-success m-3" data-bs-toggle="modal" data-bs-target="#detalleVenta" ><i class="fas fa-cash-register"></i> Nueva Venta</button>
 
-			{% with mensajes = get_flashed_messages() %} {% if mensajes %} {% for msj in mensajes %}
-			<div class="alert alert-info alert-dismissible fade show mt-4" role="alert">
-				{{ msj }}
-				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-			</div>
-			{% endfor %} {% endif %} {% endwith %}
-
 			<table class="table table-hover my-auto">
 				<thead>
 					<tr>
@@ -342,49 +310,42 @@
 				<tbody>
 					{% for i in ventas %}
 					<tr>
-						<th scope="row">{{i.id_Detalle_Venta}}</th>
-						<td>{{i.FK_Producto}}</td>
+						<th scope="row">{{i.id_p}}</th>
+						<td>{{i.nombre_p}}</td>
 						<td>{{i.Cantidad}}</td>
-						<td>{{i.FK_Producto}}</td>
+						<td>{{i.precio}}</td>
 						<td>{{i.Precio_Venta}}</td>
-						<td style="text-align: center; vertical-align: middle">
-							<button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#editar{{i.id_c}}">
-								<i class="fas fa-user-edit"></i>
+						<td class="text-center">
+							<button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detalleVenta-e{{i.id_Detalle_Venta}}">
+								<i class="fas fa-edit"></i>
 							</button>
 						</td>
 						<td class="text-center">
-							<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#eliminar{{i.id_c}}"><i class="fas fa-user-slash"></i> {{i.id_c}}</button>
+							<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#detalleVenta-d{{i.id_Detalle_Venta}}">
+								<i class="fas fa-trash"></i>
+							</button>
 						</td>
 					</tr>
 
-					<!--  EDITAR  -->
-					<div class="modal fade" id="detalleVenta-e{{i.id_c}}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+					<div class="modal fade" id="detalleVenta-e{{i.id_Detalle_Venta}}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 						<div class="modal-dialog modal-dialog-centered">
 							<div class="modal-content">
-								<form action="/uCliente" method="POST">
-									<input type="hidden" name="id_c" value="{{i.id_c}}" />
+								<form action="/uVenta" method="POST">
+									<input type="hidden" name="id_Detalle_Venta" value="{{i.id_Detalle_Venta}}" />
 									<div class="modal-header">
 										<h5 class="modal-title" id="staticBackdropLabel">Editar</h5>
 										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 									</div>
 									<div class="modal-body">
-										<div class="form-group">
-											<label for="nombre_c">Nombre: </label>
-											<input type="text" name="nombre_c" value="{{i.nombre_c}}" class="form-control" placeholder="Ingrese su nombre" required />
-										</div>
-										<div class="form-row">
-											<div class="form-group col-md-6">
-												<label for="correo_c">Correo: </label>
-												<input type="email" name="correo_c" value="{{i.correo_c}}" class="form-control" placeholder="Correo electrónico" required />
+										<div class="row">
+											<div class="col-md-6">
+												<label for="cantidad">ID Producto: </label>
+												<input type="text" name="cantidad" class="form-control" value="" required />
 											</div>
-											<div class="form-group col-md-6">
-												<label for="telefono_c">Teléfono: </label>
-												<input type="number" name="telefono_c" value="{{i.telefono_c}}" class="form-control" placeholder="Número telefónico" min="1" max="9999999999" />
+											<div class="col-md-6">
+												<label for="cantidad">Cantidad:</label>
+												<input type="number" name="cantidad" class="form-control" placeholder="" required />
 											</div>
-										</div>
-										<div class="form-group">
-											<label for="exampleFormControlTextarea1">Dirección: </label>
-											<textarea class="form-control" name="direccion_c" id="exampleFormControlTextarea1" rows="3" placeholder="Ingrese la dirección">{{i.direccion_c}}</textarea>
 										</div>
 									</div>
 									<div class="modal-footer">
@@ -396,17 +357,17 @@
 					</div>
 
 					<!--  ELIMINAR  -->
-					<div class="modal fade" id="detalleVenta-d{{i.id_c}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+					<div class="modal fade" id="detalleVenta-d{{i.id_Detalle_Venta}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
 						<div class="modal-dialog modal-dialog-centered" role="document">
 							<div class="modal-content">
 								<div class="modal-header">
 									<h5 class="modal-title" id="exampleModalCenter">Eliminar</h5>
 									<button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
 								</div>
-								<form action="/dCliente" method="POST">
-									<input type="hidden" name="id_c" value="{{i.id_c}}" />
+								<form action="/dVenta" method="POST">
+									<input type="hidden" name="id_Detalle_Venta" value="{{i.id_Detalle_Venta}}" />
 									<div class="modal-body">
-										<p>¿Realmente deseas elminar a {{i.nombre_c}}?</p>
+										<p>¿Realmente deseas elminar la venta?</p>
 									</div>
 									<div class="modal-footer">
 										<button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fas fa-window-close"></i> Cancelar</button>
@@ -422,23 +383,19 @@
 					<div class="modal fade" id="detalleVenta" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 						<div class="modal-dialog modal-dialog-centered">
 							<div class="modal-content">
-								<form action="/iClientes" method="POST">
+								<form action="/iVenta" method="POST">
 									<div class="modal-header">
-										<h5 class="modal-title" id="staticBackdropLabel">Nuevo cliente</h5>
+										<h5 class="modal-title" id="staticBackdropLabel">Nueva Venta</h5>
 										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 									</div>
 									<div class="modal-body">
-										<div class="form-group">
-											<label for="nombre_c">ID Cliente: </label>
-											<input type="text" name="cliente" class="form-control" placeholder="" required />
-										</div>
-										<div class="form-row">
-											<div class="form-group col-md-6">
-												<label for="correo_c">ID Producto: </label>
-												<input type="text" name="producto" class="form-control" placeholder="" required />
+										<div class="row">
+											<div class="col-md-6">
+												<label for="producto_id">ID Producto: </label>
+												<input type="text" name="producto_id" class="form-control" placeholder="" required />
 											</div>
-											<div class="form-group col-md-6">
-												<label for="clave_c">Cantidad:</label>
+											<div class="col-md-6">
+												<label for="cantidad">Cantidad:</label>
 												<input type="number" name="cantidad" class="form-control" placeholder="" required />
 											</div>
 										</div>

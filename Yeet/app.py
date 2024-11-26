@@ -381,20 +381,130 @@ def CompraVenta_ABCD():
         Producto = selProducto.fetchall()
         
         selCompra = mysql.connection.cursor()
-        selCompra.execute("SELECT * FROM detalle_f_compra")
+        selCompra.execute("""
+            SELECT 
+                detalle_f_compra.id_Detalle_Compra,
+                detalle_f_compra.Cantidad,
+                detalle_f_compra.Precio_Compra,
+                producto.id_p,
+                producto.precio,
+                producto.nombre_p
+            FROM detalle_f_compra
+            JOIN producto ON detalle_f_compra.FK_Producto = producto.id_p
+        """)
         Compra = selCompra.fetchall()
         
         selVenta = mysql.connection.cursor()
-        selVenta.execute("SELECT * FROM detalle_f_venta")
+        selVenta.execute("""
+            SELECT 
+                detalle_f_venta.id_Detalle_Venta,
+                detalle_f_venta.Cantidad,
+                detalle_f_venta.Precio_Venta,
+                producto.id_p,
+                producto.precio,
+                producto.nombre_p
+            FROM detalle_f_venta
+            JOIN producto ON detalle_f_venta.FK_Producto = producto.id_p
+        """)
         Venta = selVenta.fetchall()
         
         return render_template('sCompraVenta.html', role=get_role(), compras=Compra, ventas=Venta, productos=Producto)
     else:
         return redirect(url_for('index'))
     
+@app.route('/iCompra', methods=['POST'])
+def iCompra():
+    try:
+        cursor = mysql.connection.cursor()
+        
+        # Capturar datos del formulario
+        producto_id = request.form['producto_id']
+        cantidad = request.form['cantidad']
+        
+        # Opcional: validar que el producto exista en la base de datos
+        cursor.execute("SELECT precio FROM producto WHERE id_p = %s", (producto_id,))
+        producto = cursor.fetchone()
+
+        if not producto:  # Si no se encontró el producto
+            flash("El ID del producto no existe.", "danger")
+            return redirect(url_for('CompraVenta_ABCD'))
+
+        precio_unitario = producto['precio']
+        precio_total = precio_unitario * float(cantidad)  # Calcular el precio total
+
+        cursor.execute(
+            "INSERT INTO detalle_f_compra (Cantidad, Precio_Compra, FK_Producto) VALUES (%s, %s, %s)", 
+            (cantidad, precio_total, producto_id)
+        )
+
+        mysql.connection.commit()
+
+        flash("Compra registrada exitosamente.", "success")
+    except Exception as e:
+        flash(f"Ocurrió un error al registrar la compra: {str(e)}", "danger")
+    return redirect(url_for('CompraVenta_ABCD'))
+
+@app.route('/uCompra', methods=['POST'])
+def uCompra():
+    return redirect(url_for('CompraVenta_ABCD'))
+
+@app.route('/dCompra', methods=['POST'])
+def dCompra():
+    id_Detalle_Compra = request.form['id_Detalle_Compra']
+    delCompra = mysql.connection.cursor()
+    delCompra.execute("DELETE FROM detalle_f_compra WHERE id_Detalle_Compra=%s", (id_Detalle_Compra,))
+    mysql.connection.commit()
+    flash('Se ha elminado satisfactoriamente')
+    return redirect(url_for('CompraVenta_ABCD'))
+
+@app.route('/iVenta', methods=['POST'])
+def iVenta():
+    try:
+        cursor = mysql.connection.cursor()
+        
+        # Capturar datos del formulario
+        producto_id = request.form['producto_id']
+        cantidad = request.form['cantidad']
+        
+        # Opcional: validar que el producto exista en la base de datos
+        cursor.execute("SELECT precio FROM producto WHERE id_p = %s", (producto_id,))
+        producto = cursor.fetchone()
+
+        if not producto:  # Si no se encontró el producto
+            flash("El ID del producto no existe.", "danger")
+            return redirect(url_for('CompraVenta_ABCD'))
+
+        precio_unitario = producto['precio']
+        precio_total = precio_unitario * float(cantidad)  # Calcular el precio total
+
+        cursor.execute(
+            "INSERT INTO detalle_f_venta (Cantidad, Precio_Venta, FK_Producto) VALUES (%s, %s, %s)", 
+            (cantidad, precio_total, producto_id)
+        )
+
+        mysql.connection.commit()
+
+        flash("Compra registrada exitosamente.", "success")
+    except Exception as e:
+        flash(f"Ocurrió un error al registrar la compra: {str(e)}", "danger")
+    return redirect(url_for('CompraVenta_ABCD'))
+
+@app.route('/dVenta', methods=['POST'])
+def dVenta():
+    id_Detalle_Venta = request.form['id_Detalle_Venta']
+    delVenta = mysql.connection.cursor()
+    delVenta.execute("DELETE FROM detalle_f_venta WHERE id_Detalle_Venta=%s", (id_Detalle_Venta,))
+    mysql.connection.commit()
+    flash('Se ha elminado satisfactoriamente')
+    return redirect(url_for('CompraVenta_ABCD'))
+
+@app.route('/uVenta', methods=['POST'])
+def uVenta():
+    return redirect(url_for('CompraVenta_ABCD'))
+    
 @app.route('/ejemplos', methods=['POST'])
 def ejemplos():
-    pass
+    return redirect(url_for('CompraVenta_ABCD'))
 
 @app.route('/carta')
 def carta():
