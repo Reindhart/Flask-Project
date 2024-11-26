@@ -1,4 +1,4 @@
-{% extends 'layout.html' %} {% block titulo %} Productos {% endblock %} {% block contenido %}
+{% extends 'layout.html' %} {% block titulo %} Compra Venta {% endblock %} {% block contenido %}
 
 <section class="container mt-5">
 
@@ -39,29 +39,29 @@
 
 	<h5>Ejemplos de Operadores</h5>
 	<form action="{{ url_for('execute_query') }}" method="POST">
-        <button class="btn btn-primary" type="submit" name="query" value="equal_to">Ejemplo Igual a (=)</button>
-        <button class="btn btn-primary" type="submit" name="query" value="not_equal_to">Ejemplo Distinto de (<>)</button>
-        <button class="btn btn-primary" type="submit" name="query" value="greater_than">Ejemplo Mayor que (>)</button>
-        <button class="btn btn-primary" type="submit" name="query" value="greater_or_equal">Ejemplo Mayor o igual que (>=)</button>
-        <button class="btn btn-primary" type="submit" name="query" value="less_than">Ejemplo Menor que (<)</button>
-        <button class="btn btn-primary" type="submit" name="query" value="less_or_equal">Ejemplo Menor o igual que (<=)</button>
-        <button class="btn btn-primary" type="submit" name="query" value="between">Ejemplo BETWEEN</button>
-        <button class="btn btn-primary" type="submit" name="query" value="in_set">Ejemplo IN</button>
-        <button class="btn btn-primary" type="submit" name="query" value="not_in_set">Ejemplo NOT IN</button>
-        <button class="btn btn-primary" type="submit" name="query" value="is_null">Ejemplo IS NULL</button>
-        <button class="btn btn-primary" type="submit" name="query" value="is_not_null">Ejemplo IS NOT NULL</button>
-        <button class="btn btn-primary" type="submit" name="query" value="like">Ejemplo LIKE</button>
-        <button class="btn btn-primary" type="submit" name="query" value="not_like">Ejemplo NOT LIKE</button>
-        <button class="btn btn-primary" type="submit" name="query" value="count">Ejemplo COUNT</button>
-        <button class="btn btn-primary" type="submit" name="query" value="avg">Ejemplo AVG</button>
-        <button class="btn btn-primary" type="submit" name="query" value="sum">Ejemplo SUM</button>
-        <button class="btn btn-primary" type="submit" name="query" value="max">Ejemplo MAX</button>
-        <button class="btn btn-primary" type="submit" name="query" value="min">Ejemplo MIN</button>
-        <button class="btn btn-primary" type="submit" name="query" value="count_field">Ejemplo COUNT de campo específico</button>
-        <button class="btn btn-primary" type="submit" name="query" value="avg_group">Ejemplo AVG por grupo</button>
-        <button class="btn btn-primary" type="submit" name="query" value="count_client">Ejemplo COUNT clientes</button>
-        <button class="btn btn-primary" type="submit" name="query" value="min_price">Ejemplo MIN precio</button>
-        <button class="btn btn-primary" type="submit" name="query" value="avg_exist">Ejemplo AVG existencia</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="equal_to">Ejemplo Igual a (=)</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="not_equal_to">Ejemplo Distinto de (<>)</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="greater_than">Ejemplo Mayor que (>)</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="greater_or_equal">Ejemplo Mayor o igual que (>=)</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="less_than">Ejemplo Menor que (<)</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="less_or_equal">Ejemplo Menor o igual que (<=)</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="between">Ejemplo BETWEEN</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="in_set">Ejemplo IN</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="not_in_set">Ejemplo NOT IN</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="is_null">Ejemplo IS NULL</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="is_not_null">Ejemplo IS NOT NULL</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="like">Ejemplo LIKE</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="not_like">Ejemplo NOT LIKE</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="count">Ejemplo COUNT</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="avg">Ejemplo AVG</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="sum">Ejemplo SUM</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="max">Ejemplo MAX</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="min">Ejemplo MIN</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="count_field">Ejemplo COUNT de campo específico</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="avg_group">Ejemplo AVG por grupo</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="count_client">Ejemplo COUNT clientes</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="min_price">Ejemplo MIN precio</button>
+        <button class="btn btn-primary mb-2" type="submit" name="query" value="avg_exist">Ejemplo AVG existencia</button>
     </form>
 	<div class="dropdown-divider"></div>
 	<hr>
@@ -69,18 +69,56 @@
 
 	<form action="{{ url_for('execute_query') }}" method="POST">
         <div class="mb-3">
-            <button type="submit" class="btn btn-primary mb-2" name="query" value="group_by_category">Productos por Categoría</button>
-            <button type="submit" class="btn btn-primary mb-2" name="query" value="group_by_price_range">Productos por Rango de Precio</button>
-            <button type="submit" class="btn btn-primary mb-2" name="query" value="group_by_supplier">Productos por Proveedor</button>
-            <button type="submit" class="btn btn-primary mb-2" name="query" value="group_by_stock_status">Estado de Stock</button>
-            <button type="submit" class="btn btn-primary mb-2" name="query" value="having_high_sales">Categorías con Ventas Altas</button>
-            <button type="submit" class="btn btn-primary mb-2" name="query" value="having_low_stock">Productos con Bajo Stock</button>
-            <button type="submit" class="btn btn-primary mb-2" name="query" value="order_by_price_asc">Ordenar Productos por Precio (Ascendente)</button>
-            <button type="submit" class="btn btn-primary mb-2" name="query" value="order_by_price_desc">Ordenar Productos por Precio (Descendente)</button>
-            <button type="submit" class="btn btn-primary mb-2" name="query" value="order_by_name">Ordenar Clientes por Nombre</button>
-            <button type="submit" class="btn btn-primary mb-2" name="query" value="group_and_order">Categorías Ordenadas por Total</button>
+            <button type="submit" class="btn btn-warning mb-2" name="query" value="group_by_category">Productos por Categoría</button>
+            <button type="submit" class="btn btn-warning mb-2" name="query" value="group_by_price_range">Productos por Rango de Precio</button>
+            <button type="submit" class="btn btn-warning mb-2" name="query" value="group_by_supplier">Productos por Proveedor</button>
+            <button type="submit" class="btn btn-warning mb-2" name="query" value="group_by_stock_status">Estado de Stock</button>
+            <button type="submit" class="btn btn-warning mb-2" name="query" value="having_high_sales">Categorías con Ventas Altas</button>
+            <button type="submit" class="btn btn-warning mb-2" name="query" value="having_low_stock">Productos con Bajo Stock</button>
+            <button type="submit" class="btn btn-warning mb-2" name="query" value="order_by_price_asc">Ordenar Productos por Precio (Ascendente)</button>
+            <button type="submit" class="btn btn-warning mb-2" name="query" value="order_by_price_desc">Ordenar Productos por Precio (Descendente)</button>
+            <button type="submit" class="btn btn-warning mb-2" name="query" value="order_by_name">Ordenar Clientes por Nombre</button>
+            <button type="submit" class="btn btn-warning mb-2" name="query" value="group_and_order">Categorías Ordenadas por Total</button>
         </div>
     </form>
+	<hr>
+	<h5>Consultas Básicas</h5>
+
+	<form method="POST" action="{{ url_for('execute_query') }}">
+        {% for i in range(1, 16) %}
+        	<button type="submit" class="btn btn-info mb-2" name="query" value="basic_{{ i }}">Consulta Básica {{ i }}</button>
+   		{% endfor %}
+    </form>
+	<hr>
+	<h5>Consultas Complejas</h5>
+
+	<form method="POST" action="{{ url_for('execute_query') }}">
+        {% for i in range(1, 16) %}
+        	<button type="submit" class="btn btn-success mb-2" name="query" value="complex_{{ i }}">Consulta Compleja {{ i }}</button>
+    	{% endfor %}
+    </form>
+	<hr>
+	<h5>Consultas de Agregacion</h5>
+
+	<form method="POST" action="{{ url_for('execute_query') }}">
+		{% for i in range(1, 16) %}
+       		<button type="submit" class="btn btn-danger mb-2" name="query" value="aggregation_{{ i }}">Consulta Agregación {{ i }}</button>
+    	{% endfor %}
+    </form>
+	<h5>Vistas</h5>
+
+	<div class="row">
+
+		<form class="col" method="GET" action="{{ url_for('vista_precio_promedio') }}">
+			<button type="submit" class="btn btn-secondary mb-2">Vista: Precio Promedio por Categoría</button>
+		</form>
+		<form class="col" method="GET" action="{{ url_for('vista_existencia_baja') }}">
+			<button type="submit" class="btn btn-secondary mb-2">Vista: Productos con Existencia Baja</button>
+		</form>
+		<form class="col" method="GET" action="{{ url_for('vista_ventas_totales') }}">
+			<button type="submit" class="btn btn-secondary mb-2">Vista: Ventas Totales por Categoría</button>
+		</form>
+	</div>
 
 	<hr>
 	<ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -95,6 +133,35 @@
 			</button>
 		</li>
 	</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
 	<div class="tab-content" id="myTabContent">
 		<div class="tab-pane fade show active" id="compras-registro" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
 			{% with mensajes = get_flashed_messages() %} {% if mensajes %} {% for msj in mensajes %}

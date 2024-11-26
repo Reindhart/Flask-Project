@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+
+{% block titulo %} Consulta de Productos {% endblock %}
+
+{% block contenido %}
+    <section class="container mt-5">
+        <h2>Resultados</h2>
+
+        <!-- Mensaje de Flash -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <p>{{ message|safe }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Botones para las Vistas -->
+        <div class="mt-3">
+            <a href="{{ url_for('vista_precio_promedio') }}" class="btn btn-primary">Vista: Precio Promedio por Categoría</a>
+            <a href="{{ url_for('vista_existencia_baja') }}" class="btn btn-primary">Vista: Productos con Existencia Baja</a>
+            <a href="{{ url_for('vista_ventas_totales') }}" class="btn btn-primary">Vista: Ventas Totales por Categoría</a>
+        </div>
+    </section>
+{% endblock %}

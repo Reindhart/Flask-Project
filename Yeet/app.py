@@ -466,7 +466,7 @@ def execute_query():
     elif query == 'having_high_sales':
         result = execute_sql("SELECT categoria, SUM(precio * existencia) AS ventas FROM producto GROUP BY categoria HAVING ventas > 5000;")
     elif query == 'having_low_stock':
-        result = execute_sql("SELECT nombre_p, existencia FROM producto HAVING existencia < 10;")
+        result = execute_sql("SELECT nombre_p, existencia FROM producto HAVING existencia < 70;")
     elif query == 'order_by_price_asc':
         result = execute_sql("SELECT nombre_p, precio FROM producto ORDER BY precio ASC;")
     elif query == 'order_by_price_desc':
@@ -475,9 +475,152 @@ def execute_query():
         result = execute_sql("SELECT nombre_c, correo_c FROM clientes ORDER BY nombre_c;")
     elif query == 'group_and_order':
         result = execute_sql("SELECT categoria, COUNT(*) AS total FROM producto GROUP BY categoria ORDER BY total DESC;") 
+        
+    # Consultas Básicas
+    elif query == 'basic_1':
+        result = execute_sql("SELECT * FROM producto;")
+    elif query == 'basic_2':
+        result = execute_sql("SELECT * FROM producto WHERE precio > 100;")
+    elif query == 'basic_3':
+        result = execute_sql("SELECT * FROM producto WHERE categoria = 'Alimentos';")
+    elif query == 'basic_4':
+        result = execute_sql("SELECT * FROM producto WHERE existencia > 100;")
+    elif query == 'basic_5':
+        result = execute_sql("SELECT * FROM producto WHERE nombre_p LIKE '%pato%';")
+    elif query == 'basic_6':
+        result = execute_sql("SELECT * FROM producto WHERE id_p = 1;")
+    elif query == 'basic_7':
+        result = execute_sql("SELECT * FROM producto WHERE precio BETWEEN 10 AND 50;")
+    elif query == 'basic_8':
+        result = execute_sql("SELECT * FROM producto WHERE nombre_p LIKE 'Comida%';")
+    elif query == 'basic_9':
+        result = execute_sql("SELECT * FROM producto WHERE descripcion IS NULL;")
+    elif query == 'basic_10':
+        result = execute_sql("SELECT * FROM producto WHERE existencia < 100;")
+    elif query == 'basic_11':
+        result = execute_sql("SELECT * FROM producto WHERE nombre_p = 'Jaula para periquitos';")
+    elif query == 'basic_12':
+        result = execute_sql("SELECT * FROM producto WHERE precio > 500 AND existencia > 50;")
+    elif query == 'basic_13':
+        result = execute_sql("SELECT * FROM producto WHERE imagen IS NULL;")
+    elif query == 'basic_14':
+        result = execute_sql("SELECT * FROM producto WHERE precio < 20 AND categoria = 'Cuidado';")
+    elif query == 'basic_15':
+        result = execute_sql("SELECT * FROM producto ORDER BY precio DESC;")
+
+
+    # Consultas Complejas
+    elif query == 'complex_1':
+        result = execute_sql("SELECT * FROM producto WHERE existencia > 100 ORDER BY nombre_p;")
+    elif query == 'complex_2':
+        result = execute_sql("SELECT AVG(precio) AS promedio_precio FROM producto WHERE categoria = 'Alimentos';")
+    elif query == 'complex_3':
+        result = execute_sql("SELECT categoria, nombre_p, MAX(precio) AS precio_max FROM producto GROUP BY categoria;")
+    elif query == 'complex_4':
+        result = execute_sql("SELECT categoria, COUNT(*) AS total_productos FROM producto GROUP BY categoria;")
+    elif query == 'complex_5':
+        result = execute_sql("SELECT * FROM producto WHERE precio BETWEEN 50 AND 500 ORDER BY existencia DESC;")
+    elif query == 'complex_6':
+        result = execute_sql("SELECT categoria, nombre_p, MIN(precio) AS precio_min FROM producto GROUP BY categoria;")
+    elif query == 'complex_7':
+        result = execute_sql("SELECT * FROM producto WHERE existencia > 50 AND categoria IN ('Accesorios', 'Alimentos');")
+    elif query == 'complex_8':
+        result = execute_sql("SELECT * FROM producto WHERE categoria = 'Suplementos' ORDER BY precio ASC;")
+    elif query == 'complex_9':
+        result = execute_sql("SELECT * FROM producto WHERE nombre_p LIKE '%Pato%' AND existencia > 50;")
+    elif query == 'complex_10':
+        result = execute_sql("SELECT * FROM producto WHERE nombre_p LIKE 'Bebedero%' OR nombre_p LIKE 'Comida%';")
+    elif query == 'complex_11':
+        result = execute_sql("SELECT nombre_p, precio FROM producto WHERE existencia < 50 ORDER BY precio;")
+    elif query == 'complex_12':
+        result = execute_sql("SELECT categoria, COUNT(*) AS total_productos FROM producto WHERE existencia > 100 GROUP BY categoria;")
+    elif query == 'complex_13':
+        result = execute_sql("SELECT nombre_p, existencia FROM producto WHERE nombre_p LIKE '%aliment%';")
+    elif query == 'complex_14':
+        result = execute_sql("SELECT AVG(precio) AS promedio_precio FROM producto WHERE nombre_p LIKE '%pato%';")
+    elif query == 'complex_15':
+        result = execute_sql("SELECT * FROM producto WHERE categoria = 'Accesorios' AND precio > 100 AND existencia < 50;")
+
+
+    # Consultas con Funciones de Agregación
+    elif query == 'aggregation_1':
+        result = execute_sql("SELECT COUNT(*) AS total_productos FROM producto;")
+    elif query == 'aggregation_2':
+        result = execute_sql("SELECT AVG(precio) AS precio_promedio FROM producto;")
+    elif query == 'aggregation_3':
+        result = execute_sql("SELECT SUM(precio) AS suma_precio FROM producto;")
+    elif query == 'aggregation_4':
+        result = execute_sql("SELECT MAX(precio) AS precio_maximo FROM producto;")
+    elif query == 'aggregation_5':
+        result = execute_sql("SELECT MIN(precio) AS precio_minimo FROM producto;")
+    elif query == 'aggregation_6':
+        result = execute_sql("SELECT categoria, COUNT(*) AS total_productos FROM producto GROUP BY categoria;")
+    elif query == 'aggregation_7':
+        result = execute_sql("SELECT categoria, SUM(existencia) AS total_existencia FROM producto GROUP BY categoria;")
+    elif query == 'aggregation_8':
+        result = execute_sql("SELECT AVG(precio) AS promedio_precio FROM producto WHERE existencia > 100;")
+    elif query == 'aggregation_9':
+        result = execute_sql("SELECT categoria, MIN(precio) AS precio_min FROM producto GROUP BY categoria;")
+    elif query == 'aggregation_10':
+        result = execute_sql("SELECT COUNT(*) AS total_productos FROM producto WHERE existencia > 50;")
+    elif query == 'aggregation_11':
+        result = execute_sql("SELECT SUM(precio) AS precio_total FROM producto WHERE categoria = 'Viviendas';")
+    elif query == 'aggregation_12':
+        result = execute_sql("SELECT AVG(precio) AS promedio_precio FROM producto WHERE nombre_p LIKE '%pato%';")
+    elif query == 'aggregation_13':
+        result = execute_sql("SELECT COUNT(*) AS total_productos FROM producto WHERE categoria = 'Juguetes';")
+    elif query == 'aggregation_14':
+        result = execute_sql("SELECT categoria, MAX(precio) AS precio_max, MIN(precio) AS precio_min FROM producto GROUP BY categoria;")
+    elif query == 'aggregation_15':
+        result = execute_sql("SELECT COUNT(*) AS total_productos FROM producto WHERE existencia > 100 AND precio > 50;")
+
+
+        
     flash(result)
 
     return redirect(url_for('CompraVenta_ABCD'))
 
+@app.route('/consulta_producto', methods=['GET'])
+def consulta_producto():
+    # Inicializar result vacío
+    result = None
+    
+    # Verificar el parámetro de consulta recibido
+    query = request.args.get('query')
+    
+    # Ejecutar la consulta correspondiente según el query recibido
+    if query == 'vista_precio_promedio':
+        result = execute_sql("SELECT * FROM vista_precio_promedio_categoria;")
+    elif query == 'vista_existencia_baja':
+        result = execute_sql("SELECT * FROM vista_existencia_baja;")
+    elif query == 'vista_ventas_totales':
+        result = execute_sql("SELECT * FROM vista_ventas_totales_categoria;")
+        
+    if result:
+        flash_result = ""
+        for row in result:
+            for key, value in row.items():
+                flash_result += f"<strong>{key}:</strong> {value}<br>"
+            flash_result += "<hr>"  # Separador entre las filas
+        flash(flash_result)
+    
+    # Retornar los resultados a la plantilla
+    return render_template('consulta_producto.html', result=result)
+
+@app.route('/vista_precio_promedio')
+def vista_precio_promedio():
+    return redirect(url_for('consulta_producto', query='vista_precio_promedio'))
+
+@app.route('/vista_existencia_baja')
+def vista_existencia_baja():
+    return redirect(url_for('consulta_producto', query='vista_existencia_baja'))
+
+@app.route('/vista_ventas_totales')
+def vista_ventas_totales():
+    return redirect(url_for('consulta_producto', query='vista_ventas_totales'))
+
+
 if __name__ == "__main__":
     app.run(port=3850, debug=True)
+
+
